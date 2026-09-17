@@ -465,6 +465,7 @@ function EmployerApplicationsContent() {
                               <Link
                                 href={`/candidate/${app.applicantUserId}`}
                                 target="_blank"
+                                rel="noopener noreferrer"
                                 className="font-bold text-sm text-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5 truncate group cursor-pointer"
                                 title="View candidate public portfolio"
                               >
@@ -658,6 +659,7 @@ function EmployerApplicationsContent() {
                     <Link
                       href={`/candidate/${activeApplicant.applicantUserId}`}
                       target="_blank"
+                      rel="noopener noreferrer"
                       className={buttonVariants({
                         variant: "outline",
                         size: "sm",

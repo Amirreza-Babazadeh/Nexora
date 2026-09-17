@@ -309,6 +309,7 @@ export default function CandidateProfilePage() {
                 <Link
                   href={`/candidate/${myUser._id}`}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className={buttonVariants({
                     variant: "outline",
                     size: "sm",
