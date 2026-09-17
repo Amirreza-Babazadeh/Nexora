@@ -1,0 +1,505 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(1 0 0 / 8%) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.8s infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  20%, 60% {
+    transform: rotate(10deg);
+  }
+  40%, 80% {
+    transform: rotate(-10deg);
+  }
+}
+
+/* Micro-animations for interactive Lucide icons */
+@keyframes ringBell {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(14deg);
+  }
+  30% {
+    transform: rotate(-14deg);
+  }
+  45% {
+    transform: rotate(10deg);
+  }
+  60% {
+    transform: rotate(-6deg);
+  }
+  75% {
+    transform: rotate(2deg);
+  }
+}
+
+.animate-ring-bell {
+  display: inline-block;
+  transform-origin: top center;
+  animation: ringBell 1.2s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
+}
+
+@keyframes bookmarkPop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.28) rotate(-6deg);
+  }
+  70% {
+    transform: scale(0.92) rotate(3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.animate-bookmark-pop {
+  display: inline-block;
+  animation: bookmarkPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+/* ==========================================================================
+   Clerk In-App Checkout / Subscribe Panel (Drawer & Modal)
+   ========================================================================== */
+
+/* Keyframe animations: backdrop fade-in + centered modal pop-in.
+   Centering is done with the `translate` property (matching Tailwind v4's
+   -translate-x/y-1/2 utilities), so `transform` stays free for smooth animation. */
+@keyframes clerkCheckoutFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes clerkCheckoutPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(14px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.01) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 1a. Clerk Checkout Drawer backdrop element: transparent to let the portal wrapper handle the dim */
+.cl-drawerBackdrop {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  position: fixed !important;
+  inset: 0 !important;
+}
+
+/* 1b. Checkout portal wrapper: full-screen overlay with high-end glassmorphism & deep blur */
+body > div:has(.cl-drawerRoot),
+body > div:has(.cl-pricingTableCheckout),
+body > div:has(.cl-statementRoot) {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  background: rgba(0, 0, 0, 0.62) !important;
+  backdrop-filter: blur(8px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(140%) !important;
+  box-shadow: none !important;
+  animation: clerkCheckoutFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+/* 2. Prevent background scrolling when checkout drawer is open */
+html:has(.cl-drawerBackdrop),
+body:has(.cl-drawerBackdrop),
+html:has(.cl-drawerRoot),
+body:has(.cl-drawerRoot) {
+  overflow: hidden !important;
+}
+
+/* 3. Center the Checkout Modal in the exact viewport center with rich elevation */
+.cl-drawerRoot,
+body > div > div:has(.cl-statementRoot),
+div:has(> .cl-statementRoot),
+.cl-pricingTableCheckout {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  translate: -50% -50% !important;
+  margin: 0 !important;
+  background-color: var(--card, #ffffff) !important;
+  color: var(--card-foreground, #0f172a) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 1.35rem !important;
+  width: 92vw !important;
+  max-width: 520px !important;
+  max-height: 88vh !important;
+  padding: 1.5rem 1.75rem !important;
+  overflow-y: auto !important;
+  z-index: 100000 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.06), 0 12px 24px -6px rgba(0, 0, 0, 0.08) !important;
+  animation: clerkCheckoutPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* Sleek dark-mode ambient highlight & subtle glow for the checkout dialog */
+.dark .cl-drawerRoot,
+.dark body > div > div:has(.cl-statementRoot),
+.dark div:has(> .cl-statementRoot),
+.dark .cl-pricingTableCheckout {
+  background-color: oklch(0.18 0.01 260) !important;
+  border: 1px solid oklch(1 0 0 / 14%) !important;
+  box-shadow: 0 30px 65px -15px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 45px -10px rgba(59, 130, 246, 0.18) !important;
+}
+
+/* Custom minimal scrollbar */
+.cl-drawerRoot::-webkit-scrollbar {
+  width: 5px;
+}
+.cl-drawerRoot::-webkit-scrollbar-track {
+  background: transparent;
+}
+.cl-drawerRoot::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  body > div:has(.cl-drawerRoot),
+  body > div:has(.cl-statementRoot),
+  .cl-drawerRoot,
+  body > div > div:has(.cl-statementRoot),
+  div:has(> .cl-statementRoot),
+  .cl-pricingTableCheckout {
+    animation: none !important;
+  }
+}
+
+/* Clean nested wrapper handling */
+.cl-drawerRoot .cl-drawerContent {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  border: none !important;
+  border-radius: inherit !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* Remove duplicated internal card borders and outer card wrappers in checkout */
+.cl-drawerRoot .cl-card,
+.cl-drawerRoot .cl-cardBox {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+/* 4. Checkout Header Typography */
+.cl-drawerRoot .cl-headerTitle {
+  font-size: 1.35rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.025em !important;
+  color: var(--foreground) !important;
+  line-height: 1.25 !important;
+}
+
+.cl-drawerRoot .cl-headerSubtitle {
+  font-size: 0.875rem !important;
+  color: var(--muted-foreground) !important;
+  line-height: 1.45 !important;
+  margin-top: 0.25rem !important;
+}
+
+/* 5. Statement / Order Summary Card */
+.cl-drawerRoot .cl-statementRoot,
+.cl-drawerRoot .cl-statementItem {
+  background-color: var(--muted) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.875rem !important;
+  padding: 0.875rem 1rem !important;
+}
+
+/* 6. Form Fields & Inputs */
+.cl-drawerRoot .cl-formFieldLabel {
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  color: var(--foreground) !important;
+  margin-bottom: 0.35rem !important;
+}
+
+.cl-drawerRoot .cl-formFieldInput {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.625rem !important;
+  min-height: 42px !important;
+  padding: 0.5rem 0.875rem !important;
+  font-size: 0.875rem !important;
+  transition: all 0.15s ease !important;
+}
+
+.cl-drawerRoot .cl-formFieldInput:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+  outline: none !important;
+}
+
+/* 7. Premium Gradient Checkout CTA Button */
+.cl-drawerRoot .cl-formButtonPrimary,
+.cl-pricingTableCheckout .cl-formButtonPrimary {
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 0.9375rem !important;
+  height: 46px !important;
+  border-radius: 0.75rem !important;
+  border: none !important;
+  box-shadow: 0 4px 14px -1px rgba(37, 99, 235, 0.45) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  margin-top: 1rem !important;
+}
+
+.cl-drawerRoot .cl-formButtonPrimary:hover,
+.cl-pricingTableCheckout .cl-formButtonPrimary:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #4338ca 100%) !important;
+  box-shadow: 0 6px 20px -2px rgba(37, 99, 235, 0.65) !important;
+  transform: translateY(-1.5px) !important;
+}
+
+.cl-drawerRoot .cl-formButtonPrimary:active,
+.cl-pricingTableCheckout .cl-formButtonPrimary:active {
+  transform: translateY(0) scale(0.99) !important;
+}
+
+/* 8. Close Button: Perfectly positioned for checkout drawer */
+.cl-drawerClose,
+.cl-drawerRoot button[aria-label="Close"],
+.cl-drawerContent button[aria-label="Close"],
+button[data-localization-key="drawerClose"],
+.nexora-clerk-close-btn {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  z-index: 1000001 !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 9999px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  background-color: var(--muted) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.cl-drawerClose:hover,
+.nexora-clerk-close-btn:hover {
+  transform: scale(1.08) rotate(90deg) !important;
+  color: var(--foreground) !important;
+}
+
+/* 9. Small screens / mobile responsiveness */
+@media (max-width: 640px) {
+  .cl-drawerRoot,
+  body > div > div:has(.cl-statementRoot),
+  div:has(> .cl-statementRoot),
+  .cl-pricingTableCheckout {
+    width: 94vw !important;
+    max-width: 94vw !important;
+    max-height: 90vh !important;
+    border-radius: 1.15rem !important;
+    padding: 1.25rem 1rem !important;
+  }
+
+  .cl-drawerClose,
+  .nexora-clerk-close-btn {
+    top: 12px !important;
+    right: 12px !important;
+  }
+}
