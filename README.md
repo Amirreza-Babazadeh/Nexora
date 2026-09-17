@@ -1,5 +1,7 @@
 # 🚀 Nexora — Modern Career & Hiring Platform
 
+[![Netlify Status](https://img.shields.io/badge/Live%20Demo-nexorea.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://nexorea.netlify.app/)
+
 [![Next.js](https://img.shields.io/badge/Next.js-16.2.10-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2.5-61DAFB?style=flat-square&logo=react)](https://react.dev/)
 [![Convex](https://img.shields.io/badge/Convex-1.36.1-FF5A5F?style=flat-square&logo=convex)](https://convex.dev/)
@@ -7,6 +9,8 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS%204-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 
+> 🌐 **Live Website**: [https://nexorea.netlify.app/](https://nexorea.netlify.app/)
+>
 > **Nexora** is an enterprise-grade full-stack hiring ecosystem bridging top tech talent with forward-thinking companies. Featuring sub-50ms reactive queries, multi-tenant B2B organization switching, role-based access control, applicant tracking pipelines (ATS), and seamless SaaS monetization.
 
 ---
