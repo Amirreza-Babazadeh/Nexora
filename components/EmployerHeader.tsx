@@ -22,20 +22,23 @@ export default function EmployerHeader() {
   return (
     <header className="sticky top-0 z-30 bg-card/95 backdrop-blur-md text-foreground border-b border-border shadow-xs transition-colors">
       {/* Main Top Bar */}
-      <div className="px-4 sm:px-6 py-3 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="px-2.5 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-4">
         {/* Left Brand & Desktop Nav */}
-        <div className="flex items-center gap-6 sm:gap-8">
-          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+        <div className="flex items-center gap-4 sm:gap-8 min-w-0">
+          <Link href="/" className="flex items-center gap-1.5 sm:gap-2.5 group shrink-0">
             <Image
               src="/logo-icon.png"
               alt="Nexora Logo"
-              width={34}
-              height={34}
-              className="w-8 h-auto object-contain group-hover:scale-105 transition-transform drop-shadow-sm"
+              width={32}
+              height={32}
+              className="w-7 sm:w-8 h-auto object-contain group-hover:scale-105 transition-transform drop-shadow-sm"
               priority
             />
-            <span className="font-bold text-base sm:text-xl tracking-tight text-foreground">
-              Nexora <span className="hidden sm:inline text-[10px] sm:text-xs font-normal text-primary border border-primary/30 px-1.5 sm:px-2 py-0.5 rounded-full ml-0.5">Employer</span>
+            <span className="font-bold text-sm min-[360px]:text-base sm:text-xl tracking-tight text-foreground truncate">
+              Nexora{" "}
+              <span className="hidden sm:inline text-[10px] sm:text-xs font-normal text-primary border border-primary/30 px-1.5 sm:px-2 py-0.5 rounded-full ml-0.5">
+                Employer
+              </span>
             </span>
           </Link>
 
@@ -66,7 +69,7 @@ export default function EmployerHeader() {
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
           {/* Notification Bell */}
           <NotificationBell />
 
@@ -82,9 +85,9 @@ export default function EmployerHeader() {
               elements: {
                 rootBox: "flex items-center justify-center",
                 organizationSwitcherTrigger:
-                  "bg-muted hover:bg-accent text-foreground px-2 sm:px-3 py-1.5 rounded-lg border border-border text-xs font-semibold transition-colors max-w-[120px] sm:max-w-none truncate",
+                  "bg-muted hover:bg-accent text-foreground px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-border text-[11px] sm:text-xs font-semibold transition-colors max-w-[70px] min-[360px]:max-w-[100px] sm:max-w-none truncate",
                 organizationPreviewTextContainer: "text-foreground font-semibold text-xs truncate",
-                organizationSwitcherTriggerIcon: "text-foreground opacity-80 ml-1 shrink-0",
+                organizationSwitcherTriggerIcon: "text-foreground opacity-80 ml-0.5 sm:ml-1 shrink-0",
                 organizationPreviewMainIdentifier: "text-foreground font-semibold text-xs",
                 organizationPreviewSecondaryIdentifier: "text-muted-foreground text-xs",
               },
@@ -97,7 +100,7 @@ export default function EmployerHeader() {
             afterSignOutUrl="/"
             appearance={{
               elements: {
-                avatarBox: "w-8 h-8 sm:w-9 sm:h-9 border border-border shadow-xs",
+                avatarBox: "w-7 h-7 sm:w-8.5 sm:h-8.5 border border-border shadow-xs",
               },
             }}
           />

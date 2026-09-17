@@ -99,10 +99,29 @@ export const submitApplication = mutation({
 export const checkApplicationStatus = query({
   args: {
     jobId: v.id("jobs"),
+    email: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userDoc = identity
+      ? await ctx.db
+          .query("users")
+          .withIndex("by_clerkUserId", (q) =>
+            q.eq("clerkUserId", identity.subject)
+          )
+          .first()
+      : null;
+
+    const candidateEmail = (
+      args.email ||
+      userDoc?.email ||
+      identity?.email ||
+      ""
+    )
+      .toLowerCase()
+      .trim();
+
+    if (!identity && !candidateEmail) {
       return { isAuthor: false, hasApplied: false };
     }
 
@@ -111,7 +130,7 @@ export const checkApplicationStatus = query({
       return { isAuthor: false, hasApplied: false };
     }
 
-    const isAuthor = job.authorUserId === identity.subject;
+    const isAuthor = identity ? job.authorUserId === identity.subject : false;
 
     const existingApps = await ctx.db
       .query("applications")
@@ -119,7 +138,11 @@ export const checkApplicationStatus = query({
       .collect();
 
     const hasApplied = existingApps.some(
-      (app) => app.applicantUserId === identity.subject && app.status !== "withdrawn"
+      (app) =>
+        app.status !== "withdrawn" &&
+        ((identity?.subject && app.applicantUserId === identity.subject) ||
+          (candidateEmail !== "" &&
+            app.applicantEmail.toLowerCase() === candidateEmail))
     );
 
     return { isAuthor, hasApplied };

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, ChangeEvent } from "react";
+import { useState, useEffect, useRef, useMemo, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useQuery, useMutation, useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -195,9 +196,53 @@ export default function B2CLandingPage() {
     selectedJobId ? { id: selectedJobId } : "skip",
   );
 
+  // Resolve authentic candidate name (filtering out placeholder "User")
+  const resolvedName = useMemo(() => {
+    const clerkFullName = clerkUser?.fullName?.trim();
+    if (clerkFullName && clerkFullName.toLowerCase() !== "user")
+      return clerkFullName;
+
+    const clerkParts =
+      `${clerkUser?.firstName || ""} ${clerkUser?.lastName || ""}`.trim();
+    if (clerkParts && clerkParts.toLowerCase() !== "user") return clerkParts;
+
+    const convexName = myUser?.name?.trim();
+    if (convexName && convexName.toLowerCase() !== "user") return convexName;
+
+    const convexParts =
+      `${myUser?.firstName || ""} ${myUser?.lastName || ""}`.trim();
+    if (convexParts && convexParts.toLowerCase() !== "user") return convexParts;
+
+    if (clerkFullName) return clerkFullName;
+    return "";
+  }, [clerkUser, myUser]);
+
+  // Resolve authentic candidate email from Clerk primary email or Convex
+  const resolvedEmail = useMemo(() => {
+    return (
+      clerkUser?.primaryEmailAddress?.emailAddress ||
+      clerkUser?.emailAddresses?.[0]?.emailAddress ||
+      myUser?.email ||
+      ""
+    );
+  }, [clerkUser, myUser]);
+
+  // Query authenticated candidate applications to track already-applied listings
+  const myApplications = useQuery(
+    api.applications.getMyApplications,
+    isSignedIn ? {} : "skip",
+  );
+
+  const appliedJobIdSet = useMemo(() => {
+    if (!myApplications?.applications) return new Set<string>();
+    return new Set(myApplications.applications.map((app) => app.jobId));
+  }, [myApplications]);
+
   const appStatus = useQuery(
     api.applications.checkApplicationStatus,
-    selectedJobId ? { jobId: selectedJobId } : "skip",
+    selectedJobId
+      ? { jobId: selectedJobId, email: resolvedEmail || undefined }
+      : "skip",
   );
 
   const submitApp = useMutation(api.applications.submitApplication);
@@ -264,34 +309,6 @@ export default function B2CLandingPage() {
       coverLetter: "",
     },
   });
-
-  // Resolve authentic candidate name (filtering out placeholder "User")
-  const resolvedName = (() => {
-    const clerkFullName = clerkUser?.fullName?.trim();
-    if (clerkFullName && clerkFullName.toLowerCase() !== "user")
-      return clerkFullName;
-
-    const clerkParts =
-      `${clerkUser?.firstName || ""} ${clerkUser?.lastName || ""}`.trim();
-    if (clerkParts && clerkParts.toLowerCase() !== "user") return clerkParts;
-
-    const convexName = myUser?.name?.trim();
-    if (convexName && convexName.toLowerCase() !== "user") return convexName;
-
-    const convexParts =
-      `${myUser?.firstName || ""} ${myUser?.lastName || ""}`.trim();
-    if (convexParts && convexParts.toLowerCase() !== "user") return convexParts;
-
-    if (clerkFullName) return clerkFullName;
-    return "";
-  })();
-
-  // Resolve authentic candidate email from Clerk primary email or Convex
-  const resolvedEmail =
-    clerkUser?.primaryEmailAddress?.emailAddress ||
-    clerkUser?.emailAddresses?.[0]?.emailAddress ||
-    myUser?.email ||
-    "";
 
   // Auto-sync authentic Clerk profile into Convex record if it was saved with placeholder "User" or missing email
   useEffect(() => {
@@ -456,6 +473,16 @@ export default function B2CLandingPage() {
       : undefined;
 
     // Strict client-side pre-flight checks: NEVER send incomplete data to Convex backend
+    if (
+      appStatus?.hasApplied ||
+      (selectedJobId && appliedJobIdSet.has(selectedJobId))
+    ) {
+      toast.info(
+        "You have already submitted an active application for this job listing."
+      );
+      return;
+    }
+
     if (!values.applicantName?.trim()) {
       toast.error("Please enter your full name.");
       return;
@@ -1040,12 +1067,23 @@ export default function B2CLandingPage() {
                   </CardContent>
 
                   <CardFooter>
-                    <Button
-                      onClick={() => handleOpenApply(job._id)}
-                      className="w-full font-bold text-xs"
-                    >
-                      View Details & Apply
-                    </Button>
+                    {appliedJobIdSet.has(job._id) ? (
+                      <Button
+                        onClick={() => handleOpenApply(job._id)}
+                        variant="secondary"
+                        className="w-full font-bold text-xs bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/25 border border-emerald-500/20 cursor-pointer"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 mr-1 text-emerald-500" />
+                        Applied (View Details)
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => handleOpenApply(job._id)}
+                        className="w-full font-bold text-xs cursor-pointer"
+                      >
+                        View Details & Apply
+                      </Button>
+                    )}
                   </CardFooter>
                 </Card>
               );
@@ -1142,9 +1180,33 @@ export default function B2CLandingPage() {
                   🔒 You are the author of this job posting. Self-applications
                   are disabled.
                 </div>
-              ) : appStatus?.hasApplied ? (
-                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold text-center">
-                  ✓ You have already submitted an application for this position.
+              ) : appStatus?.hasApplied ||
+                (selectedJobId && appliedJobIdSet.has(selectedJobId)) ? (
+                <div className="p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-center space-y-3">
+                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center font-bold text-lg">
+                    ✓
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-bold text-foreground">
+                      Application Already Submitted
+                    </h4>
+                    <p className="text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed">
+                      You have an active application on file for this position.
+                      The hiring team has received your profile and will update
+                      your status as candidates are reviewed.
+                    </p>
+                  </div>
+                  <div className="pt-1">
+                    <Link href="/candidate/applications">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="text-xs font-semibold border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 cursor-pointer"
+                      >
+                        Track in My Applications →
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               ) : (
                 /* Candidate Apply Form */
@@ -1429,7 +1491,14 @@ export default function B2CLandingPage() {
                       </Button>
                       <Button
                         type="submit"
-                        disabled={applyForm.formState.isSubmitting}
+                        disabled={
+                          applyForm.formState.isSubmitting ||
+                          Boolean(
+                            appStatus?.hasApplied ||
+                              (selectedJobId &&
+                                appliedJobIdSet.has(selectedJobId))
+                          )
+                        }
                         className="gap-2 shadow-md shadow-primary/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed font-bold"
                       >
                         {applyForm.formState.isSubmitting ? (

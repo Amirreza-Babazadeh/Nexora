@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery, useMutation, useConvexAuth } from "convex/react";
 import { useUser } from "@clerk/nextjs";
@@ -48,6 +48,7 @@ import {
   Globe,
   Target,
   DollarSign,
+  CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
 import MainHeader from "@/components/MainHeader";
@@ -89,10 +90,27 @@ export default function CandidateSavedJobsPage() {
     }
   );
 
+  const userEmail =
+    clerkUser?.primaryEmailAddress?.emailAddress ||
+    clerkUser?.emailAddresses?.[0]?.emailAddress ||
+    myUser?.email ||
+    undefined;
+
+  // Query candidate's existing applications
+  const myApplications = useQuery(
+    api.applications.getMyApplications,
+    isAuthenticated ? {} : "skip"
+  );
+
+  const appliedJobIdSet = useMemo(() => {
+    if (!myApplications?.applications) return new Set<string>();
+    return new Set(myApplications.applications.map((app) => app.jobId));
+  }, [myApplications]);
+
   // Check application status for dialog apply button
   const appStatus = useQuery(
     api.applications.checkApplicationStatus,
-    selectedJobId ? { jobId: selectedJobId } : "skip",
+    selectedJobId ? { jobId: selectedJobId, email: userEmail } : "skip",
   );
 
   const selectedJob = useQuery(
@@ -161,6 +179,16 @@ export default function CandidateSavedJobsPage() {
     const fileName = values.resumeFileName || defaultRes?.fileName;
 
     // Strict client-side pre-flight checks: NEVER send incomplete data to Convex backend
+    if (
+      appStatus?.hasApplied ||
+      (selectedJobId && appliedJobIdSet.has(selectedJobId))
+    ) {
+      toast.info(
+        "You have already submitted an active application for this job listing."
+      );
+      return;
+    }
+
     if (!values.applicantName?.trim()) {
       toast.error("Please enter your full name.");
       return;
@@ -378,10 +406,25 @@ export default function CandidateSavedJobsPage() {
                     <Button
                       onClick={() => setSelectedJobId(item.jobId)}
                       disabled={isClosed}
-                      className="w-full font-bold text-xs"
-                      variant={isClosed ? "secondary" : "default"}
+                      className="w-full font-bold text-xs cursor-pointer"
+                      variant={
+                        isClosed
+                          ? "secondary"
+                          : appliedJobIdSet.has(item.jobId)
+                            ? "secondary"
+                            : "default"
+                      }
                     >
-                      {isClosed ? "Position Closed" : "View Details & Apply"}
+                      {isClosed ? (
+                        "Position Closed"
+                      ) : appliedJobIdSet.has(item.jobId) ? (
+                        <>
+                          <CheckCircle2 className="w-3.5 h-3.5 mr-1 text-emerald-500" />
+                          Applied (View Details)
+                        </>
+                      ) : (
+                        "View Details & Apply"
+                      )}
                     </Button>
                   </CardFooter>
                 </Card>
@@ -479,11 +522,33 @@ export default function CandidateSavedJobsPage() {
                     ⚠️ You posted this job listing from your organization. You
                     cannot apply to your own position.
                   </div>
-                ) : appStatus?.hasApplied ? (
-                  <div className="p-4 bg-primary/10 border border-primary/30 rounded-xl text-primary text-xs font-medium text-center">
-                    ℹ️ You have already submitted an application for this
-                    position. Check your Candidate Dashboard for real-time
-                    status updates!
+                ) : appStatus?.hasApplied ||
+                  (selectedJobId && appliedJobIdSet.has(selectedJobId)) ? (
+                  <div className="p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-center space-y-3">
+                    <div className="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center font-bold text-lg">
+                      ✓
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-bold text-foreground">
+                        Application Already Submitted
+                      </h4>
+                      <p className="text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed">
+                        You have already submitted an application for this
+                        position. You can track its live status in My
+                        Applications.
+                      </p>
+                    </div>
+                    <div className="pt-1">
+                      <Link href="/candidate/applications">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs font-semibold border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 cursor-pointer"
+                        >
+                          Track in My Applications →
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 ) : (
                   <Form {...applyForm}>
@@ -602,8 +667,15 @@ export default function CandidateSavedJobsPage() {
                         </Button>
                         <Button
                           type="submit"
-                          disabled={applyForm.formState.isSubmitting}
-                          className="font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={
+                            applyForm.formState.isSubmitting ||
+                            Boolean(
+                              appStatus?.hasApplied ||
+                                (selectedJobId &&
+                                  appliedJobIdSet.has(selectedJobId))
+                            )
+                          }
+                          className="gap-2 shadow-md shadow-primary/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed font-bold"
                         >
                           {applyForm.formState.isSubmitting
                             ? "Submitting..."

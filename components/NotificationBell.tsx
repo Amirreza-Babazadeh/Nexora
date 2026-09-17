@@ -163,10 +163,10 @@ export default function NotificationBell() {
         onClick={() => setIsOpen(!isOpen)}
         aria-label="View notifications"
         aria-expanded={isOpen}
-        className="relative rounded-full hover:bg-muted/80 transition-colors"
+        className="relative h-8 w-8 sm:h-9 sm:w-9 rounded-full hover:bg-muted/80 transition-colors shrink-0"
       >
         <Bell
-          className={`w-5 h-5 transition-transform ${
+          className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform ${
             unreadCount > 0
               ? "text-primary animate-ring-bell"
               : "text-muted-foreground hover:text-foreground"
@@ -175,15 +175,23 @@ export default function NotificationBell() {
 
         {/* Active Unread Badge */}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-black text-primary-foreground shadow-xs animate-in zoom-in-50">
+          <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 sm:h-5 sm:min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[9px] sm:text-[10px] font-black text-primary-foreground shadow-xs animate-in zoom-in-50">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </Button>
 
+      {/* Mobile backdrop */}
+      {isOpen && (
+        <div
+          className="sm:hidden fixed inset-0 z-40 bg-background/50 backdrop-blur-xs"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2.5 w-84 sm:w-96 rounded-2xl bg-popover border border-border shadow-2xl z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150">
+        <div className="fixed inset-x-2 top-14 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2.5 w-auto sm:w-96 rounded-2xl bg-popover border border-border shadow-2xl z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150 max-w-[calc(100vw-1rem)] sm:max-w-md mx-auto sm:mx-0">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/40">
             <div className="flex items-center gap-2">
